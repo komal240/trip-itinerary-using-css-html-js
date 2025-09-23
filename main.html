@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Personalized AI Trip Itinerary Planner</title>
+  <style>
+    :root{
+      --bg:#0f1724; --card:#0b1220; --muted:#94a3b8; --accent:#7c3aed; --glass: rgba(255,255,255,0.04);
+      --radius:14px;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:linear-gradient(180deg,#071029,#081224);color:#e6eef8;min-height:100vh;display:flex;align-items:flex-start;justify-content:center;padding:36px}
+    .app{width:100%;max-width:1100px}
+
+    header{display:flex;gap:16px;align-items:center;margin-bottom:18px}
+    .logo{width:64px;height:64px;border-radius:12px;background:linear-gradient(135deg,var(--accent),#5eead4);display:flex;align-items:center;justify-content:center;font-weight:700;color:#07203a}
+    h1{font-size:20px;margin:0}
+    p.lead{margin:0;color:var(--muted);font-size:13px}
+
+    .layout{display:grid;grid-template-columns:360px 1fr;gap:20px}
+
+    .panel{background:var(--card);padding:18px;border-radius:var(--radius);box-shadow:0 6px 20px rgba(2,6,23,0.6);border:1px solid rgba(255,255,255,0.02)}
+
+    /* Form */
+    form .row{display:flex;gap:10px;margin-bottom:10px}
+    label{font-size:12px;color:var(--muted);display:block;margin-bottom:6px}
+    input,select,textarea{width:100%;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);background:var(--glass);color:inherit;font-size:14px}
+    textarea{min-height:78px;resize:vertical}
+    .small{font-size:13px;color:var(--muted);margin-bottom:8px}
+
+    .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:10px;background:linear-gradient(90deg,var(--accent),#5eead4);color:#041023;font-weight:600;border:none;cursor:pointer}
+    .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.05);color:var(--muted)}
+
+    /* Results */
+    .resultsHeader{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+    .itineraryGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:14px;border-radius:12px;border:1px solid rgba(255,255,255,0.03)}
+    .card h3{margin:0 0 8px 0;font-size:15px}
+    .pill{display:inline-block;padding:6px 8px;border-radius:999px;background:rgba(255,255,255,0.03);font-size:12px;color:var(--muted)}
+    .slot{font-size:13px;margin:8px 0;padding:8px;border-radius:8px;background:rgba(0,0,0,0.12)}
+    .meta{color:var(--muted);font-size:13px}
+
+    footer{margin-top:18px;color:var(--muted);font-size:13px;text-align:center}
+
+    /* Responsive */
+    @media (max-width:880px){
+      .layout{grid-template-columns:1fr}
+    }
+
+    .itineraryGrid {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.sectionBlock {
+  background: #f8f9fa;
+  padding: 1rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.dayCard {
+  background: #fff5e6;
+  padding: 1.2rem;
+  border-left: 6px solid #a0d9de;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+ 
+}
+
+.dayCard h2 {
+  margin-bottom: 0.60rem;
+  color: #3650c5;
+ 
+}
+
+.dayCard p {
+  font-size: 0.80rem;
+  line-height: 1.5;
+  color: #000;
+}
+
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header>
+      <div class="logo">AI</div>
+      <div>
+        <h1>Personalized AI Trip Itinerary Planner</h1>
+        <p class="lead"></p>
+      </div>
+    </header>
+
+    <section class="layout">
+      <aside class="panel" aria-labelledby="planner-form">
+        <form id="planner-form">
+          <div class="small">Basic details</div>
+          <div class="row">
+            <div style="flex:1">
+              <label>Destination</label>
+              <input required id="destination" placeholder="e.g., Paris, Tokyo, Goa" />
+            </div>
+          </div>
+
+          <div class="row">
+            <div style="flex:1">
+              <label>Start_date</label>
+              <input type="date" id="startDate" required />
+            </div>
+            <div style="width:120px">
+              <label>Days</label>
+              <input type="number" id="numDays" min="1" max="30" value="3" />
+            </div>
+          </div>
+
+          <div class="row">
+            <div style="flex:1">
+              <label>Travel_style</label>
+              <select id="style">
+                <option>Relaxed</option>
+                <option>Balanced</option>
+                <option selected>Active / Explorer</option>
+              </select>
+            </div>
+            <div style="width:120px">
+              <label>Budget</label>
+              <select id="budget">
+                <option>Low</option>
+                <option selected>Medium</option>
+                <option>High</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label>Interests (comma separated)</label>
+            <input id="interests" placeholder="museums, food, beaches, hiking" />
+          </div>
+
+          <div style="margin-top:10px">
+            <label>Preferences / Notes</label>
+            <textarea id="notes" placeholder="Any must-see places, dietary needs, mobility constraints..."></textarea>
+          </div>
+           <div id="output"></div>
+
+          <div style="display:flex;gap:10px;margin-top:14px;align-items:center">
+            <button class="btn" id="Generate" type="submit">Generate Itinerary</button>
+            <button id="clear" type="button" class="btn ghost">Clear</button>
+          </div>
+        </form>
+
+        <div style="margin-top:12px;color:var(--muted);font-size:13px"></div>
+      </aside>
+
+      <section>
+        <div class="panel" id="s1">
+          <div class="resultsHeader">
+            <div>
+              <div class="meta">Generated itinerary for <span id="summaryDest">—</span></div>
+              <div class="meta" id="summaryDates"> </div>
+            </div>
+            <div style="display:flex;gap:8px;align-items:center">
+              <button id="downloadJSON" class="btn ghost">Download JSON</button>
+              <button id="copy" class="btn ghost">Copy</button>
+            </div>
+          </div>
+
+          <div id="itineraryArea" class="itineraryGrid">
+       
+          </div>
+        </div>
+
+        <footer>
+         
+        </footer>
+      </section>
+    </section>
+  </main>
+
+  <script src="./main.js"></script>
+</body>
+</html>
