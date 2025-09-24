@@ -7,6 +7,8 @@ const interestsInput = document.getElementById("interests");
 const generateBtn = document.getElementById("Generate");
 const outputDiv = document.getElementById("output");
 const itineraryArea = document.getElementById("itineraryArea");
+const downloadBtn = document.getElementById("downloadPDF");
+
 
 async function generatetripplan() {
   generateBtn.disabled = true;
