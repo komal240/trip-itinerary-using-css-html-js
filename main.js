@@ -14,7 +14,7 @@ async function generatetripplan() {
   itineraryArea.innerHTML = "";
 
   try {
-    const response = await fetch("https://backend-767f.onrender.com/generate", {  // corrected port
+    const response = await fetch("https://backend-1-tnng.onrender.com/generate", {  // corrected port
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
